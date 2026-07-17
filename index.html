@@ -3,462 +3,616 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>🌱 小美识字乐园 — 幼儿园汉字启蒙游戏</title>
+<title>🌟 小美识字乐园</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(135deg, #fef9c3 0%, #fde68a 30%, #fef3c7 60%, #fef9c3 100%);
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
-  overflow: hidden; user-select: none; -webkit-tap-highlight-color: transparent;
-}
-.container { width: 100%; max-width: 500px; padding: 16px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Noto Sans SC','KaiTi','Microsoft YaHei',sans-serif;background:linear-gradient(180deg,#fef9c3 0%,#fef3c7 40%,#fde68a 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;overflow-y:auto}
+.container{width:100%;max-width:520px;padding:12px;min-height:100vh;display:flex;flex-direction:column}
 
-/* ── 标题 ── */
-.title-bar { text-align: center; margin-bottom: 12px; }
-.title-bar h1 { font-size: 28px; color: #92400e; text-shadow: 2px 2px 0 rgba(255,255,255,0.6); }
-.title-bar .stars-row { display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
-.star { font-size: 28px; transition: all 0.4s; filter: grayscale(1) opacity(0.25); }
-.star.earned { filter: none; animation: popIn 0.5s ease-out; }
-@keyframes popIn { 0%{transform:scale(0)} 60%{transform:scale(1.3)} 100%{transform:scale(1)} }
+/* ── 通用 ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:16px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn:active{transform:scale(.95)}
+.btn-big{font-size:22px;padding:16px 32px}
+.btn-med{font-size:17px;padding:12px 24px}
+.btn-yellow{background:#f59e0b;color:#fff}
+.btn-yellow:hover{background:#d97706}
+.btn-green{background:#10b981;color:#fff}
+.btn-purple{background:#8b5cf6;color:#fff}
+.btn-outline{background:#fff;border:3px solid #fbbf24;color:#92400e}
 
-/* ── 卡片区 ── */
-.card {
-  background: #fff; border-radius: 24px; padding: 28px 20px 24px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
-  text-align: center;
-}
-.question { font-size: 18px; color: #78716c; margin-bottom: 8px; font-weight: 500; }
-.emoji-display {
-  font-size: 80px; line-height: 1.2; margin: 8px 0 4px;
-  animation: float 2.5s ease-in-out infinite;
-}
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-.hint { font-size: 14px; color: #a8a29e; margin-bottom: 16px; }
+/* ── 主页 ── */
+.home{text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.home .logo{font-size:80px;animation:bounce 1.5s ease-in-out infinite}
+.home h1{font-size:32px;color:#92400e;text-shadow:2px 2px 0 rgba(255,255,255,.6)}
+.home .subtitle{font-size:15px;color:#a16207}
+.home .stats{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.home .stat{background:#fff;border-radius:16px;padding:12px 20px;box-shadow:0 2px 12px rgba(0,0,0,.06);text-align:center;min-width:80px}
+.home .stat .num{font-size:28px;font-weight:800;color:#f59e0b}
+.home .stat .lbl{font-size:11px;color:#a8a29e}
+.mode-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px}
+.mode-btn{width:100%;font-size:20px;padding:16px;text-align:left;display:flex;align-items:center;gap:12px;justify-content:flex-start}
+.mode-btn .icon{font-size:32px}
 
-/* ── 选项按钮 ── */
-.options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.option-btn {
-  background: #fefce8; border: 3px solid #fde68a; border-radius: 18px;
-  padding: 18px 8px; font-size: 36px; font-weight: 700; color: #78350f;
-  cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-  font-family: 'PingFang SC', 'Noto Sans SC', 'KaiTi', serif;
-}
-.option-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(251,191,36,0.25); }
-.option-btn:active { transform: scale(0.95); }
-.option-btn.correct {
-  background: #dcfce7; border-color: #4ade80; color: #166534;
-  animation: correctPulse 0.6s ease-out;
-}
-.option-btn.wrong {
-  background: #fee2e2; border-color: #f87171; color: #991b1b;
-  animation: shake 0.5s ease-out;
-}
-@keyframes correctPulse { 0%{transform:scale(1)} 40%{transform:scale(1.08)} 100%{transform:scale(1)} }
-@keyframes shake {
-  0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)}
-}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
 
-/* ── 反馈浮层 ── */
-.feedback {
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
-  font-size: 64px; pointer-events: none; z-index: 100; transition: none;
-}
-.feedback.show { animation: feedbackPop 1.2s ease-out forwards; }
-@keyframes feedbackPop {
-  0%{transform:translate(-50%,-50%) scale(0);opacity:0}
-  25%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
-  100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}
-}
+/* ── 游戏区 ── */
+.game{flex:1;display:flex;flex-direction:column;gap:12px}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:4px 0}
+.top-bar .back{font-size:24px;background:none;border:none;cursor:pointer;padding:4px 8px}
+.top-bar .score-area{display:flex;align-items:center;gap:8px;font-size:16px;color:#92400e;font-weight:600}
+.top-bar .streak{font-size:18px}
+.progress-outer{height:10px;background:#fef3c7;border-radius:5px;overflow:hidden}
+.progress-inner{height:100%;background:linear-gradient(90deg,#fbbf24,#10b981);border-radius:5px;transition:width .4s}
+.card-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;border-radius:24px;padding:20px;box-shadow:0 4px 24px rgba(0,0,0,.06);text-align:center;gap:12px}
+.card-area .prompt{font-size:18px;color:#78716c}
+.card-area .display{font-size:88px;line-height:1.1;animation:float 2.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.card-area .display.char{font-size:72px;font-weight:700;color:#78350f;font-family:'KaiTi','PingFang SC',serif}
+.card-area .hint{font-size:14px;color:#a8a29e;padding:0 16px}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.opt{background:#fefce8;border:3px solid #fde68a;border-radius:16px;padding:16px 8px;font-size:32px;font-weight:700;color:#78350f;cursor:pointer;transition:all .2s;font-family:'KaiTi','PingFang SC',serif}
+.opt:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(251,191,36,.2)}
+.opt:active{transform:scale(.94)}
+.opt.correct{background:#dcfce7;border-color:#4ade80;color:#166534;animation:pop .5s}
+.opt.wrong{background:#fee2e2;border-color:#f87171;color:#991b1b;animation:shake .5s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
-/* ── 进度 ── */
-.progress-wrap { margin-top: 16px; display: flex; align-items: center; gap: 10px; }
-.progress-bar-outer {
-  flex: 1; height: 12px; background: #fef3c7; border-radius: 6px; overflow: hidden;
-}
-.progress-bar-inner {
-  height: 100%; background: linear-gradient(90deg,#fbbf24,#f59e0b); border-radius: 6px;
-  transition: width 0.5s ease;
-}
-.progress-text { font-size: 14px; color: #92400e; font-weight: 600; white-space: nowrap; }
+.feedback-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:72px;pointer-events:none;z-index:100}
+.feedback-pop.show{animation:fbPop 1s ease-out forwards}
+@keyframes fbPop{0%{transform:translate(-50%,-50%) scale(0);opacity:0}30%{transform:translate(-50%,-50%) scale(1.3);opacity:1}100%{transform:translate(-50%,-50%) scale(1.6);opacity:0}}
 
-/* ── 完成界面 ── */
-.complete-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  animation: fadeIn 0.3s;
-}
-.complete-card {
-  background: #fff; border-radius: 28px; padding: 36px 28px; text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15); max-width: 380px; width: 90%;
-  animation: scaleIn 0.4s ease-out;
-}
-.complete-card .trophy { font-size: 72px; margin-bottom: 8px; }
-.complete-card h2 { font-size: 26px; color: #92400e; margin-bottom: 4px; }
-.complete-card .score { font-size: 48px; font-weight: 800; color: #f59e0b; }
-.complete-card button {
-  margin-top: 20px; background: #f59e0b; color: #fff; border: none; border-radius: 14px;
-  padding: 14px 40px; font-size: 20px; font-weight: 700; cursor: pointer; transition: 0.2s;
-}
-.complete-card button:hover { background: #d97706; transform: scale(1.04); }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
-@keyframes scaleIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+/* ── 结果页 ── */
+.result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s}
+.result-card{background:#fff;border-radius:28px;padding:32px 24px;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.12);max-width:380px;width:90%;animation:scaleIn .4s}
+.result-card .trophy{font-size:64px}
+.result-card h2{font-size:24px;color:#92400e;margin:8px 0}
+.result-card .big-num{font-size:44px;font-weight:800;color:#f59e0b}
+.result-card .detail{font-size:13px;color:#a8a29e;margin:4px 0}
+.result-card .btn-row{display:flex;gap:10px;margin-top:16px;justify-content:center;flex-wrap:wrap}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── 难度标签 ── */
+.level-tag{display:inline-block;font-size:12px;padding:2px 10px;border-radius:8px;font-weight:600}
+.lv-easy{background:#dcfce7;color:#166534}
+.lv-med{background:#fef3c7;color:#92400e}
+.lv-hard{background:#fee2e2;color:#991b1b}
 
 /* ── confetti ── */
-.confetti-piece {
-  position: fixed; z-index: 250; pointer-events: none;
-  animation: confettiFall 2.5s ease-out forwards;
-}
-@keyframes confettiFall {
-  0%{transform:translateY(-120px) rotate(0deg);opacity:1}
-  100%{transform:translateY(105vh) rotate(720deg);opacity:0}
-}
+.confetti{position:fixed;z-index:250;pointer-events:none;animation:cfFall 2s ease-out forwards}
+@keyframes cfFall{0%{transform:translateY(-80px) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
 
 /* ── 响应式 ── */
-@media (max-width:400px) {
-  .emoji-display { font-size: 60px; }
-  .option-btn { font-size: 28px; padding: 14px 4px; }
+@media(max-width:400px){
+ .home .logo{font-size:56px}
+ .home h1{font-size:24px}
+ .card-area .display{font-size:60px}
+ .card-area .display.char{font-size:50px}
+ .opt{font-size:26px;padding:12px 4px}
 }
 </style>
 </head>
 <body>
+<div class="container" id="app"></div>
+<div class="feedback-pop" id="fpop"></div>
 
-<div class="container">
-  <div class="title-bar">
-    <h1>🌱 小美识字乐园</h1>
-    <div class="stars-row" id="starsRow"></div>
-  </div>
-
-  <div class="card">
-    <div class="question" id="questionText"></div>
-    <div class="emoji-display" id="emojiDisplay"></div>
-    <div class="hint" id="hintText"></div>
-    <div class="options" id="optionsGrid"></div>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
-    <div class="progress-text" id="progressText"></div>
-  </div>
-</div>
-
-<div class="feedback" id="feedback"></div>
-
-<!-- 音频引擎 -->
 <script>
 // ═══════════════════════════════════════════
-// 汉字数据库（30个字，分5级，每级6个）
+// 字库：300+ 小学常用字，按难度分级（1-5）
 // ═══════════════════════════════════════════
-const LEVELS = [
-  { // 第1关：大自然
-    title: '第1关 · 大自然',
-    chars: [
-      { char:'日', emoji:'☀️', hint:'天上发光的大火球', keywords:['太阳','白天'] },
-      { char:'月', emoji:'🌙', hint:'晚上天上弯弯的', keywords:['月亮','夜晚'] },
-      { char:'山', emoji:'⛰️', hint:'高高大大的土石堆', keywords:['高山','登山'] },
-      { char:'水', emoji:'💧', hint:'可以喝、可以洗手的', keywords:['喝水','河水'] },
-      { char:'火', emoji:'🔥', hint:'很热、红红的、能煮饭', keywords:['火焰','生火'] },
-      { char:'木', emoji:'🌳', hint:'公园里绿色的，有树枝', keywords:['树木','木头'] },
-    ]
-  },
-  { // 第2关：身体与动物
-    title: '第2关 · 身体与动物',
-    chars: [
-      { char:'人', emoji:'🧑', hint:'我们就是___类', keywords:['人类','大人'] },
-      { char:'口', emoji:'👄', hint:'用来吃饭、说话的地方', keywords:['嘴巴','开口'] },
-      { char:'目', emoji:'👁️', hint:'用来看东西的器官', keywords:['眼睛','目光'] },
-      { char:'手', emoji:'✋', hint:'用来拿东西、写字的', keywords:['小手','拍手'] },
-      { char:'马', emoji:'🐴', hint:'可以骑的、跑得快的动物', keywords:['小马','骑马'] },
-      { char:'鸟', emoji:'🐦', hint:'在天上飞的、有羽毛的', keywords:['小鸟','飞鸟'] },
-    ]
-  },
-  { // 第3关：植物与自然
-    title: '第3关 · 植物与自然',
-    chars: [
-      { char:'花', emoji:'🌸', hint:'五颜六色、香香的', keywords:['花朵','开花'] },
-      { char:'草', emoji:'🌿', hint:'绿色的、长在地上一片片', keywords:['小草','草地'] },
-      { char:'田', emoji:'🌾', hint:'农民伯伯种庄稼的地方', keywords:['田地','稻田'] },
-      { char:'雨', emoji:'🌧️', hint:'从天上掉下来的水滴', keywords:['下雨','雨伞'] },
-      { char:'云', emoji:'☁️', hint:'天上白白的、飘来飘去', keywords:['白云','云朵'] },
-      { char:'石', emoji:'🪨', hint:'硬硬的、灰色的、路边的', keywords:['石头','石子'] },
-    ]
-  },
-  { // 第4关：日常生活
-    title: '第4关 · 日常生活',
-    chars: [
-      { char:'门', emoji:'🚪', hint:'进房间要打开的', keywords:['大门','门口'] },
-      { char:'车', emoji:'🚗', hint:'四个轮子、可以坐的', keywords:['汽车','开车'] },
-      { char:'书', emoji:'📖', hint:'有很多纸、可以看的', keywords:['书本','读书'] },
-      { char:'米', emoji:'🍚', hint:'白白的、煮成饭吃的', keywords:['大米','米饭'] },
-      { char:'鱼', emoji:'🐟', hint:'在水里游的、有鳞片的', keywords:['小鱼','金鱼'] },
-      { char:'天', emoji:'🌤️', hint:'我们头顶上蓝色的一大片', keywords:['天空','蓝天'] },
-    ]
-  },
-  { // 第5关：方位与数量
-    title: '第5关 · 方位与数量',
-    chars: [
-      { char:'上', emoji:'⬆️', hint:'和下相反的方向', keywords:['上面','向上'] },
-      { char:'下', emoji:'⬇️', hint:'和上相反的方向', keywords:['下面','向下'] },
-      { char:'大', emoji:'🐘', hint:'和小相反，大象很___', keywords:['大小','巨大'] },
-      { char:'小', emoji:'🐭', hint:'和大相反，老鼠很___', keywords:['大小','微小'] },
-      { char:'一', emoji:'1️⃣', hint:'最小的数字，第一个', keywords:['一个','第一'] },
-      { char:'三', emoji:'3️⃣', hint:'比二多一个，比四少一个', keywords:['三个','第三'] },
-    ]
-  }
+const CHAR_DB = [
+  // ★ 难度 1：象形/指事，1-4 画
+  {c:'一',d:1, e:'1️⃣',h:'最小的数字',t:'数字'},
+  {c:'二',d:1, e:'2️⃣',h:'比一多一个',t:'数字'},
+  {c:'三',d:1, e:'3️⃣',h:'比二多一个',t:'数字'},
+  {c:'十',d:1, e:'🔟',h:'十个一是___',t:'数字'},
+  {c:'人',d:1, e:'🧑',h:'我们就是___类',t:'身体'},
+  {c:'大',d:1, e:'🐘',h:'大象很___',t:'形容词'},
+  {c:'小',d:1, e:'🐭',h:'老鼠很___',t:'形容词'},
+  {c:'上',d:1, e:'⬆️',h:'___面，和下相反',t:'方位'},
+  {c:'下',d:1, e:'⬇️',h:'___面，和上相反',t:'方位'},
+  {c:'口',d:1, e:'👄',h:'吃___，说___',t:'身体'},
+  {c:'目',d:1, e:'👁️',h:'___光，眼睛',t:'身体'},
+  {c:'手',d:1, e:'✋',h:'___掌，用来拿东西',t:'身体'},
+  {c:'日',d:1, e:'☀️',h:'___出，太阳',t:'自然'},
+  {c:'月',d:1, e:'🌙',h:'___亮，晚上才有',t:'自然'},
+  {c:'水',d:1, e:'💧',h:'喝___，___龙头',t:'自然'},
+  {c:'火',d:1, e:'🔥',h:'___焰，红色烫烫的',t:'自然'},
+  {c:'山',d:1, e:'⛰️',h:'高高的，可以爬',t:'自然'},
+  {c:'木',d:1, e:'🌳',h:'___头，树',t:'自然'},
+  {c:'天',d:1, e:'🌤️',h:'___空，我们头顶',t:'自然'},
+  {c:'田',d:1, e:'🌾',h:'稻___，种庄稼',t:'自然'},
+  {c:'石',d:1, e:'🪨',h:'___头，硬硬的',t:'自然'},
+  {c:'土',d:1, e:'🟫',h:'泥___，大地',t:'自然'},
+  {c:'工',d:1, e:'🔧',h:'___人，___具',t:'职业'},
+  {c:'王',d:1, e:'👑',h:'国___，最厉害的人',t:'称呼'},
+  {c:'中',d:1, e:'🇨🇳',h:'___国，___间',t:'方位'},
+  {c:'个',d:1, e:'#️⃣',h:'一___人，几___',t:'量词'},
+  {c:'子',d:1, e:'👶',h:'孩___，儿___',t:'称呼'},
+  {c:'女',d:1, e:'👧',h:'___生，___儿',t:'称呼'},
+  {c:'马',d:1, e:'🐴',h:'___儿，可以骑',t:'动物'},
+  {c:'牛',d:1, e:'🐮',h:'___奶，黑白的动物',t:'动物'},
+  {c:'羊',d:1, e:'🐑',h:'___毛，咩咩叫',t:'动物'},
+  {c:'鸟',d:1, e:'🐦',h:'小___，在天上飞',t:'动物'},
+  {c:'鱼',d:1, e:'🐟',h:'___儿，在水里游',t:'动物'},
+  {c:'虫',d:1, e:'🐛',h:'___子，毛毛___',t:'动物'},
+  // ★ 难度 2：常用，4-6 画
+  {c:'四',d:2, e:'4️⃣',h:'数字，比三多一',t:'数字'},
+  {c:'五',d:2, e:'5️⃣',h:'数字，一只手的手指',t:'数字'},
+  {c:'六',d:2, e:'6️⃣',h:'数字',t:'数字'},
+  {c:'七',d:2, e:'7️⃣',h:'数字',t:'数字'},
+  {c:'八',d:2, e:'8️⃣',h:'数字',t:'数字'},
+  {c:'九',d:2, e:'9️⃣',h:'数字',t:'数字'},
+  {c:'百',d:2, e:'💯',h:'十个十是一___',t:'数字'},
+  {c:'千',d:2, e:'🔢',h:'十个一百是一___',t:'数字'},
+  {c:'万',d:2, e:'📊',h:'一千个十是一___',t:'数字'},
+  {c:'白',d:2, e:'⬜',h:'___色，和黑相反',t:'颜色'},
+  {c:'花',d:2, e:'🌸',h:'___朵，五颜六色',t:'植物'},
+  {c:'草',d:2, e:'🌿',h:'小___，绿绿的',t:'植物'},
+  {c:'竹',d:2, e:'🎋',h:'___子，熊猫爱吃',t:'植物'},
+  {c:'米',d:2, e:'🍚',h:'___饭，白白的',t:'食物'},
+  {c:'瓜',d:2, e:'🍉',h:'西___，夏天吃',t:'食物'},
+  {c:'果',d:2, e:'🍎',h:'水___，___实',t:'食物'},
+  {c:'肉',d:2, e:'🥩',h:'___类，猪肉牛肉',t:'食物'},
+  {c:'风',d:2, e:'💨',h:'刮___，空气流动',t:'自然'},
+  {c:'云',d:2, e:'☁️',h:'___朵，白白的在天上',t:'自然'},
+  {c:'雨',d:2, e:'🌧️',h:'下___，天上掉水',t:'自然'},
+  {c:'电',d:2, e:'⚡',h:'___灯，___视',t:'自然'},
+  {c:'光',d:2, e:'💡',h:'灯___，日光',t:'自然'},
+  {c:'门',d:2, e:'🚪',h:'大___，___口',t:'物品'},
+  {c:'车',d:2, e:'🚗',h:'汽___，四个轮子',t:'物品'},
+  {c:'书',d:2, e:'📖',h:'___本，可以读',t:'物品'},
+  {c:'刀',d:2, e:'🔪',h:'___子，切东西',t:'物品'},
+  {c:'力',d:2, e:'💪',h:'___气，努___',t:'概念'},
+  {c:'心',d:2, e:'❤️',h:'___脏，爱___',t:'身体'},
+  {c:'头',d:2, e:'🗣️',h:'___脑，___发',t:'身体'},
+  {c:'见',d:2, e:'👀',h:'看___，遇___',t:'动作'},
+  {c:'开',d:2, e:'🔓',h:'___门，___始',t:'动作'},
+  {c:'来',d:2, e:'🚶',h:'___到，过___',t:'动作'},
+  {c:'去',d:2, e:'🏃',h:'___年，出___',t:'动作'},
+  {c:'出',d:2, e:'🚪➡️',h:'___门，___来',t:'动作'},
+  {c:'入',d:2, e:'⬅️🚪',h:'进___，___口',t:'动作'},
+  {c:'年',d:2, e:'📅',h:'一___，___龄',t:'时间'},
+  {c:'回',d:2, e:'↩️',h:'___家，___答',t:'动作'},
+  {c:'生',d:2, e:'🌱',h:'___命，___长',t:'概念'},
+  {c:'气',d:2, e:'😤',h:'生___，___球',t:'概念'},
+  {c:'学',d:2, e:'📚',h:'___习，___校',t:'动作'},
+  {c:'字',d:2, e:'📝',h:'写___，汉___',t:'概念'},
+  {c:'用',d:2, e:'🛠️',h:'___处，使___',t:'动作'},
+  {c:'对',d:2, e:'✅',h:'___错，___面',t:'概念'},
+  {c:'长',d:2, e:'📏',h:'___短，成___',t:'形容词'},
+  {c:'少',d:2, e:'🔻',h:'多___，___年',t:'形容词'},
+  {c:'多',d:2, e:'🔺',h:'很___，许___',t:'形容词'},
+  {c:'老',d:2, e:'👴',h:'___师，___人',t:'称呼'},
+  {c:'师',d:2, e:'👩‍🏫',h:'老___，___傅',t:'职业'},
+  {c:'同',d:2, e:'🤝',h:'___学，___样',t:'概念'},
+  {c:'自',d:2, e:'🙋',h:'___己，___动',t:'概念'},
+  // ★ 难度 3：常用，6-8 画
+  {c:'爸',d:3, e:'👨',h:'___爸，父亲',t:'家庭'},
+  {c:'妈',d:3, e:'👩',h:'___妈，母亲',t:'家庭'},
+  {c:'哥',d:3, e:'👦',h:'___哥，兄弟',t:'家庭'},
+  {c:'弟',d:3, e:'🧒',h:'___弟，兄弟',t:'家庭'},
+  {c:'姐',d:3, e:'👧',h:'___姐，姐妹',t:'家庭'},
+  {c:'妹',d:3, e:'👶',h:'___妹，姐妹',t:'家庭'},
+  {c:'爷',d:3, e:'👴',h:'___爷，祖父',t:'家庭'},
+  {c:'奶',d:3, e:'👵',h:'___奶，祖母',t:'家庭'},
+  {c:'家',d:3, e:'🏠',h:'___庭，回___',t:'家庭'},
+  {c:'爱',d:3, e:'💕',h:'___你，喜___',t:'情感'},
+  {c:'好',d:3, e:'👍',h:'___人，友___',t:'形容词'},
+  {c:'早',d:3, e:'🌅',h:'___上，___餐',t:'时间'},
+  {c:'晚',d:3, e:'🌆',h:'___上，___餐',t:'时间'},
+  {c:'春',d:3, e:'🌸',h:'___天，___节',t:'季节'},
+  {c:'夏',d:3, e:'☀️',h:'___天，___季',t:'季节'},
+  {c:'秋',d:3, e:'🍂',h:'___天，___季',t:'季节'},
+  {c:'冬',d:3, e:'❄️',h:'___天，___季',t:'季节'},
+  {c:'花',d:3, e:'🌺',h:'___园，___朵',t:'植物'},
+  {c:'树',d:3, e:'🌲',h:'___林，大___',t:'植物'},
+  {c:'叶',d:3, e:'🍃',h:'树___，___子',t:'植物'},
+  {c:'地',d:3, e:'🌍',h:'大___，土___',t:'自然'},
+  {c:'海',d:3, e:'🌊',h:'大___，___洋',t:'自然'},
+  {c:'河',d:3, e:'🏞️',h:'___流，___水',t:'自然'},
+  {c:'江',d:3, e:'🌉',h:'长___，___水',t:'自然'},
+  {c:'湖',d:3, e:'🏝️',h:'___泊，___水',t:'自然'},
+  {c:'星',d:3, e:'⭐',h:'___星，___期',t:'自然'},
+  {c:'雪',d:3, e:'🌨️',h:'下___，___花',t:'自然'},
+  {c:'狗',d:3, e:'🐕',h:'小___，___汪汪',t:'动物'},
+  {c:'猫',d:3, e:'🐱',h:'___咪，喵喵叫',t:'动物'},
+  {c:'鸡',d:3, e:'🐔',h:'公___，___蛋',t:'动物'},
+  {c:'鸭',d:3, e:'🦆',h:'___子，嘎嘎叫',t:'动物'},
+  {c:'虎',d:3, e:'🐯',h:'老___，___年',t:'动物'},
+  {c:'兔',d:3, e:'🐰',h:'___子，白___',t:'动物'},
+  {c:'龙',d:3, e:'🐲',h:'___年，恐___',t:'动物'},
+  {c:'蛇',d:3, e:'🐍',h:'___年，爬行动物',t:'动物'},
+  {c:'吃',d:3, e:'🍽️',h:'___饭，___东西',t:'动作'},
+  {c:'喝',d:3, e:'🥤',h:'___水，___汤',t:'动作'},
+  {c:'走',d:3, e:'🚶',h:'___路，行___',t:'动作'},
+  {c:'跑',d:3, e:'🏃',h:'___步，飞___',t:'动作'},
+  {c:'飞',d:3, e:'✈️',h:'___机，___翔',t:'动作'},
+  {c:'看',d:3, e:'👀',h:'___书，___见',t:'动作'},
+  {c:'听',d:3, e:'👂',h:'___说，___见',t:'动作'},
+  {c:'说',d:3, e:'💬',h:'___话，___明',t:'动作'},
+  {c:'读',d:3, e:'📖',h:'___书，朗___',t:'动作'},
+  {c:'写',d:3, e:'✍️',h:'___字，书___',t:'动作'},
+  {c:'画',d:3, e:'🎨',h:'___画，___图',t:'动作'},
+  {c:'笑',d:3, e:'😄',h:'___脸，微___',t:'情感'},
+  {c:'哭',d:3, e:'😢',h:'___泣，大___',t:'情感'},
+  {c:'唱',d:3, e:'🎤',h:'___歌，歌___',t:'动作'},
+  {c:'跳',d:3, e:'🕺',h:'___舞，蹦___',t:'动作'},
+  {c:'玩',d:3, e:'🎮',h:'___耍，游___',t:'动作'},
+  {c:'打',d:3, e:'👊',h:'___球，___开',t:'动作'},
+  {c:'买',d:3, e:'🛒',h:'___东西，购___',t:'动作'},
+  {c:'红',d:3, e:'🔴',h:'___色，___花',t:'颜色'},
+  {c:'绿',d:3, e:'🟢',h:'___色，___叶',t:'颜色'},
+  {c:'蓝',d:3, e:'🔵',h:'___天，___色',t:'颜色'},
+  {c:'黄',d:3, e:'🟡',h:'___色，___金',t:'颜色'},
+  {c:'黑',d:3, e:'⚫',h:'___色，___夜',t:'颜色'},
+  {c:'金',d:3, e:'🥇',h:'___色，___子',t:'物品'},
+  {c:'银',d:3, e:'🥈',h:'___行，___色',t:'物品'},
+  {c:'铁',d:3, e:'🔩',h:'___路，钢___',t:'物品'},
+  {c:'面',d:3, e:'🍜',h:'___条，___前',t:'食物'},
+  {c:'饭',d:3, e:'🍚',h:'吃___，___店',t:'食物'},
+  {c:'菜',d:3, e:'🥬',h:'蔬___，白___',t:'食物'},
+  {c:'茶',d:3, e:'🍵',h:'___水，喝___',t:'食物'},
+  {c:'甜',d:3, e:'🍬',h:'___味，香___',t:'形容词'},
+  {c:'先',d:3, e:'🥇',h:'___生，___后',t:'时间'},
+  {c:'做',d:3, e:'🛠️',h:'___事，___工',t:'动作'},
+  {c:'知',d:3, e:'🧠',h:'___道，认___',t:'概念'},
+  {c:'道',d:3, e:'🛤️',h:'___路，知___',t:'概念'},
+  {c:'法',d:3, e:'⚖️',h:'方___，办___',t:'概念'},
+  {c:'乐',d:3, e:'😊',h:'快___，欢___',t:'情感'},
+  {c:'音',d:3, e:'🎵',h:'声___，___乐',t:'概念'},
+  {c:'语',d:3, e:'🗣️',h:'___言，汉___',t:'概念'},
+  {c:'文',d:3, e:'📄',h:'___字，___化',t:'概念'},
+  // ★ 难度 4：进阶，7-10 画
+  {c:'教',d:4, e:'👨‍🏫',h:'___室，___育',t:'职业'},
+  {c:'室',d:4, e:'🏫',h:'教___，卧___',t:'物品'},
+  {c:'桌',d:4, e:'🪑',h:'___子，书___',t:'物品'},
+  {c:'椅',d:4, e:'💺',h:'___子，座___',t:'物品'},
+  {c:'床',d:4, e:'🛏️',h:'___铺，睡___',t:'物品'},
+  {c:'灯',d:4, e:'💡',h:'电___，开___',t:'物品'},
+  {c:'路',d:4, e:'🛣️',h:'道___，过___',t:'物品'},
+  {c:'球',d:4, e:'⚽',h:'足___，地___',t:'物品'},
+  {c:'衣',d:4, e:'👕',h:'___服，穿___',t:'物品'},
+  {c:'纸',d:4, e:'📄',h:'___张，白___',t:'物品'},
+  {c:'种',d:4, e:'🌱',h:'___子，___植',t:'动作'},
+  {c:'国',d:4, e:'🇨🇳',h:'中___，___家',t:'概念'},
+  {c:'城',d:4, e:'🏙️',h:'___市，长___',t:'地点'},
+  {c:'市',d:4, e:'🏪',h:'城___，超___',t:'地点'},
+  {c:'公',d:4, e:'🏢',h:'___园，___司',t:'概念'},
+  {c:'园',d:4, e:'🏞️',h:'公___，花___',t:'地点'},
+  {c:'医',d:4, e:'🏥',h:'___生，___院',t:'职业'},
+  {c:'院',d:4, e:'🏥',h:'医___，学___',t:'地点'},
+  {c:'店',d:4, e:'🏪',h:'商___，饭___',t:'地点'},
+  {c:'站',d:4, e:'🚉',h:'___立，车___',t:'地点'},
+  {c:'客',d:4, e:'🧑',h:'___人，顾___',t:'称呼'},
+  {c:'外',d:4, e:'🌍',h:'___面，___国',t:'方位'},
+  {c:'里',d:4, e:'🏠➡️',h:'___面，家___',t:'方位'},
+  {c:'前',d:4, e:'⬅️',h:'___面，以___',t:'方位'},
+  {c:'后',d:4, e:'➡️',h:'___面，以___',t:'方位'},
+  {c:'左',d:4, e:'👈',h:'___边，___手',t:'方位'},
+  {c:'右',d:4, e:'👉',h:'___边，___手',t:'方位'},
+  {c:'动',d:4, e:'🏃',h:'___物，运___',t:'概念'},
+  {c:'物',d:4, e:'📦',h:'动___，___品',t:'概念'},
+  {c:'真',d:4, e:'✅',h:'___实，认___',t:'形容词'},
+  {c:'假',d:4, e:'❌',h:'___的，放___',t:'形容词'},
+  {c:'快',d:4, e:'🏃💨',h:'___乐，飞___',t:'形容词'},
+  {c:'慢',d:4, e:'🐢',h:'___慢，快___',t:'形容词'},
+  {c:'高',d:4, e:'🏔️',h:'___山，___矮',t:'形容词'},
+  {c:'低',d:4, e:'📉',h:'___头，降___',t:'形容词'},
+  {c:'远',d:4, e:'🔭',h:'___方，遥___',t:'形容词'},
+  {c:'近',d:4, e:'🔍',h:'___处，接___',t:'形容词'},
+  {c:'美',d:4, e:'💄',h:'___丽，___好',t:'形容词'},
+  {c:'直',d:4, e:'📏',h:'___接，笔___',t:'形容词'},
+  {c:'班',d:4, e:'🏫',h:'___级，上___',t:'概念'},
+  {c:'课',d:4, e:'📖',h:'上___，___本',t:'概念'},
+  {c:'礼',d:4, e:'🎁',h:'___物，___貌',t:'概念'},
+  {c:'忙',d:4, e:'🏃💨',h:'___碌，繁___',t:'形容词'},
+  {c:'休',d:4, e:'😴',h:'___息，___假',t:'动作'},
+  {c:'息',d:4, e:'😮‍💨',h:'休___，消___',t:'动作'},
+  {c:'热',d:4, e:'🥵',h:'___闹，天___',t:'形容词'},
+  {c:'冷',d:4, e:'🥶',h:'___天，寒___',t:'形容词'},
+  {c:'圆',d:4, e:'⭕',h:'___形，团___',t:'形容词'},
+  {c:'洗',d:4, e:'🚿',h:'___澡，___手',t:'动作'},
+  {c:'夏',d:4, e:'🏖️',h:'___天，盛___',t:'季节'},
+  {c:'春',d:4, e:'🌸',h:'___节，___天',t:'季节'},
+  // ★ 难度 5：较难，10+ 画
+  {c:'唱',d:5, e:'🎶',h:'___歌，演___',t:'动作'},
+  {c:'游',d:5, e:'🏊',h:'___戏，___泳',t:'动作'},
+  {c:'游',d:5, e:'🎮',h:'___玩，漫___',t:'动作'},
+  {c:'睡',d:5, e:'😴',h:'___觉，入___',t:'动作'},
+  {c:'醒',d:5, e:'⏰',h:'___来，清___',t:'动作'},
+  {c:'蓝',d:5, e:'🟦',h:'___色，___天',t:'颜色'},
+  {c:'绿',d:5, e:'🟩',h:'___色，嫩___',t:'颜色'},
+  {c:'紫',d:5, e:'🟣',h:'___色，___花',t:'颜色'},
+  {c:'谢',d:5, e:'🙏',h:'感___，多___',t:'礼貌'},
+  {c:'请',d:5, e:'🙏',h:'___坐，邀___',t:'礼貌'},
+  {c:'累',d:5, e:'😩',h:'___了，劳___',t:'形容词'},
+  {c:'饿',d:5, e:'🍽️',h:'___了，饥___',t:'形容词'},
+  {c:'渴',d:5, e:'💧',h:'___了，口___',t:'形容词'},
+  {c:'病',d:5, e:'🤒',h:'___了，生___',t:'身体'},
+  {c:'药',d:5, e:'💊',h:'___片，吃___',t:'物品'},
+  {c:'钱',d:5, e:'💰',h:'金___，花___',t:'物品'},
+  {c:'贵',d:5, e:'💎',h:'___重，昂___',t:'形容词'},
+  {c:'蓝',d:5, e:'🦋',h:'___天白云',t:'颜色'},
+  {c:'象',d:5, e:'🐘',h:'大___，形___',t:'动物'},
+  {c:'猴',d:5, e:'🐵',h:'___子，调皮',t:'动物'},
+  {c:'熊',d:5, e:'🐻',h:'___猫，黑___',t:'动物'},
+  {c:'鼠',d:5, e:'🐭',h:'老___，___年',t:'动物'},
+  {c:'猪',d:5, e:'🐷',h:'小___，___肉',t:'动物'},
+  {c:'晴',d:5, e:'☀️',h:'___天，天___',t:'自然'},
+  {c:'阴',d:5, e:'☁️',h:'___天，___影',t:'自然'},
+  {c:'暖',d:5, e:'🌡️',h:'___和，温___',t:'形容词'},
+  {c:'楼',d:5, e:'🏢',h:'大___，上___',t:'地点'},
+  {c:'桥',d:5, e:'🌉',h:'大___，天___',t:'物品'},
 ];
 
-// ═══════════════════════════════════════════
-// 游戏状态
-// ═══════════════════════════════════════════
-let currentLevel = 0;
-let currentIdx = 0;
-let totalCorrect = 0;
-let totalAnswered = 0;
-let earnedStars = []; // [levelIndex] → star count (0-3)
-let isAnswering = false;
+// ── 去重 ──
+const seen=new Set();
+const CHARS=CHAR_DB.filter(x=>{if(seen.has(x.c))return false;seen.add(x.c);return true});
 
 // ═══════════════════════════════════════════
-// 音频（简易 Web Audio 蜂鸣）
+// 持久化存储
 // ═══════════════════════════════════════════
-let audioCtx = null;
-function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const LS={get(k,d){try{const v=localStorage.getItem('xm_literacy_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('xm_literacy_'+k,JSON.stringify(v))}catch(e){}}};
+
+function saveState(s){LS.set('state',s)}
+function loadState(){
+  return LS.get('state',{
+    correct:{},wrong:{},totalCorrect:0,totalWrong:0,currentLevel:1,streak:0,bestStreak:0,mode:'emoji2char',roundsPlayed:0
+  });
 }
-function playTone(freq, duration, type='sine', vol=0.12) {
-  try {
-    initAudio();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = type; osc.frequency.value = freq;
-    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + duration);
-  } catch(e){}
+
+// ═══════════════════════════════════════════
+// 间隔重复：错误字返回间隔（题数）
+// ═══════════════════════════════════════════
+function reviewInterval(wrongCount){
+  if(wrongCount<=1)return 3;
+  if(wrongCount<=3)return 5;
+  if(wrongCount<=6)return 8;
+  return 12;
 }
-function sfxCorrect() { playTone(523,0.1); setTimeout(()=>playTone(659,0.1),100); setTimeout(()=>playTone(784,0.15),200); }
-function sfxWrong() { playTone(200,0.25,'square',0.06); }
-function sfxStar() { playTone(880,0.08); setTimeout(()=>playTone(1047,0.08),80); setTimeout(()=>playTone(1319,0.12),160); }
-function sfxComplete() {
-  [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,0.2),i*120));
+
+function getReviewQueue(state){
+  const queue=[];
+  for(const[c,count]of Object.entries(state.wrong)){
+    const correct=state.correct[c]||0;
+    if(correct<5||count>0){
+      queue.push({c,priority:count-correct*0.5,since:state.roundsPlayed-(state._lastReview?.[c]||0)});
+    }
+  }
+  queue.sort((a,b)=>b.priority-a.priority);
+  return queue;
 }
+
+// ═══════════════════════════════════════════
+// 自适应难度：根据最近准确率调整字难度
+// ═══════════════════════════════════════════
+function getDifficultyLevel(state){
+  const recent=state._recentResults||[];
+  if(recent.length<8)return state.currentLevel;
+  const acc=recent.filter(r=>r).length/recent.length;
+  if(acc>0.85&&state.currentLevel<5)return state.currentLevel+1;
+  if(acc<0.5&&state.currentLevel>1)return state.currentLevel-1;
+  return state.currentLevel;
+}
+
+// ═══════════════════════════════════════════
+// 选题逻辑
+// ═══════════════════════════════════════════
+function pickQuestion(state){
+  const lvl=getDifficultyLevel(state);
+  const pool=CHARS.filter(c=>c.d<=lvl);
+  // 优先从复习队列选
+  const queue=getReviewQueue(state);
+  let target;
+  if(queue.length>0&&Math.random()<0.5){
+    target=pool.find(c=>c.c===queue[0].c)||pool[Math.floor(Math.random()*pool.length)];
+  }else{
+    // 加权随机：偏重错得多的字
+    const weights=pool.map(c=>{
+      const wc=state.wrong[c.c]||0;
+      const cc=state.correct[c.c]||0;
+      return 1+(wc*3)/(cc+1);
+    });
+    const total=weights.reduce((a,b)=>a+b,0);
+    let r=Math.random()*total;
+    for(let i=0;i<pool.length;i++){r-=weights[i];if(r<=0){target=pool[i];break}}
+    if(!target)target=pool[Math.floor(Math.random()*pool.length)];
+  }
+  // 生成选项
+  const wrongs=pool.filter(c=>c.c!==target.c).sort(()=>Math.random()-.5).slice(0,3);
+  const opts=[target,...wrongs].sort(()=>Math.random()-.5);
+  return {target,opts,lvl};
+}
+
+// ═══════════════════════════════════════════
+// 音效
+// ═══════════════════════════════════════════
+let actx=null;
+function ctx(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx}
+function tone(f,d,t='sine',v=0.1){
+  try{const o=ctx().createOscillator(),g=ctx().createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,ctx().currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx().currentTime+d);o.connect(g);g.connect(ctx().destination);o.start();o.stop(ctx().currentTime+d)}catch(e){}
+}
+function sfxOk(){tone(523,.08);setTimeout(()=>tone(659,.08),80);setTimeout(()=>tone(784,.12),160)}
+function sfxNo(){tone(180,.2,'square',.06)}
+function sfxStar(){tone(880,.06);setTimeout(()=>tone(1047,.06),60);setTimeout(()=>tone(1319,.1),120)}
+function sfxWin(){[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,.15),i*100))}
 
 // ═══════════════════════════════════════════
 // 渲染
 // ═══════════════════════════════════════════
-function renderStars() {
-  const row = document.getElementById('starsRow');
-  row.innerHTML = '';
-  for (let i = 0; i < LEVELS.length; i++) {
-    const s = document.createElement('span');
-    s.className = 'star';
-    s.textContent = '⭐';
-    s.title = LEVELS[i].title;
-    const earned = earnedStars[i] || 0;
-    if (earned >= 1) s.classList.add('earned');
-    if (earned === 2) s.style.transform = 'scale(0.85)';
-    if (earned === 3) s.style.transform = 'scale(1.1)';
-    if (earned === 0 && i < currentLevel) s.style.opacity = '0.15';
-    row.appendChild(s);
-  }
+let state=loadState();
+let q=null,answering=false,roundInSession=0;
+
+function r(){render();ctx()} // init audio on first interaction
+function render(){
+  const app=document.getElementById('app');
+  app.innerHTML=`
+    <div class="home">
+      <div class="logo">🌟</div>
+      <h1>小美识字乐园</h1>
+      <p class="subtitle">已掌握 ${Object.keys(state.correct).length} 个字 · 连胜 ${state.bestStreak} 题</p>
+      <div class="stats">
+        <div class="stat"><div class="num">⭐ ${state.totalCorrect}</div><div class="lbl">正确</div></div>
+        <div class="stat"><div class="num">🔄 ${state.totalWrong}</div><div class="lbl">待复习</div></div>
+        <div class="stat"><div class="num"><span class="level-tag lv-${state.currentLevel<=2?'easy':state.currentLevel<=4?'med':'hard'}">Lv${state.currentLevel}</span></div><div class="lbl">难度</div></div>
+      </div>
+      <div class="mode-btns">
+        <button class="btn btn-yellow btn-big mode-btn" onclick="startGame('emoji2char')"><span class="icon">🖼️→📝</span> 看图识字</button>
+        <button class="btn btn-green btn-big mode-btn" onclick="startGame('char2emoji')"><span class="icon">📝→🖼️</span> 看字找图</button>
+        <button class="btn btn-purple btn-big mode-btn" onclick="startGame('meaning')"><span class="icon">💡→📝</span> 看提示猜字</button>
+        <button class="btn btn-outline btn-med" onclick="resetData()" style="margin-top:8px">🔄 重新开始</button>
+      </div>
+    </div>`;
 }
 
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function startGame(mode){
+  ctx();
+  state.mode=mode;roundInSession=0;
+  state._recentResults=state._recentResults||[];
+  state._lastReview=state._lastReview||{};
+  nextRound();
 }
 
-function renderQuestion() {
-  const level = LEVELS[currentLevel];
-  const item = level.chars[currentIdx];
-
-  document.getElementById('questionText').textContent = level.title;
-  document.getElementById('emojiDisplay').textContent = item.emoji;
-  document.getElementById('hintText').textContent = `💡 ${item.hint}`;
-  document.getElementById('progressBar').style.width =
-    ((currentIdx) / level.chars.length * 100) + '%';
-  document.getElementById('progressText').textContent =
-    `${currentIdx}/${level.chars.length}`;
-
-  // 生成选项：1个正确 + 3个随机错误
-  const allChars = LEVELS.flatMap(l => l.chars.map(c => c.char));
-  const wrongPool = allChars.filter(c => c !== item.char);
-  const shuffledWrong = shuffle(wrongPool).slice(0, 3);
-  const options = shuffle([item.char, ...shuffledWrong]);
-
-  const grid = document.getElementById('optionsGrid');
-  grid.innerHTML = '';
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(opt, item.char, btn));
+function nextRound(){
+  q=pickQuestion(state);
+  answering=false;
+  roundInSession++;
+  state.roundsPlayed++;
+  const app=document.getElementById('app');
+  const mode=state.mode;
+  const t=q.target;
+  let prompt,display,displayClass;
+  if(mode==='emoji2char'){
+    prompt='这是什么字？';
+    display=t.e||'📝';displayClass='';
+  }else if(mode==='char2emoji'){
+    prompt='找一找对应的图片';
+    display=t.c;displayClass='char';
+  }else{
+    prompt='根据提示，选正确的字';
+    display='💡';displayClass='';
+  }
+  app.innerHTML=`
+    <div class="game">
+      <div class="top-bar">
+        <button class="back" onclick="r()">🏠</button>
+        <div class="score-area">
+          <span>🔥 ${state.streak}</span>
+          <span class="level-tag lv-${state.currentLevel<=2?'easy':state.currentLevel<=4?'med':'hard'}">Lv${state.currentLevel}</span>
+          <span>⭐ ${state.totalCorrect}</span>
+        </div>
+      </div>
+      <div class="progress-outer"><div class="progress-inner" style="width:${Math.min(100,roundInSession/15*100)}%"></div></div>
+      <div class="card-area">
+        <div class="prompt">${prompt}</div>
+        <div class="display ${displayClass}">${display}</div>
+        ${mode==='meaning'?`<div class="hint">💡 ${t.h}</div>`:''}
+        ${mode==='emoji2char'?`<div class="hint">${t.h}</div>`:''}
+        <div class="options-grid" id="opts"></div>
+      </div>
+    </div>`;
+  const grid=document.getElementById('opts');
+  q.opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.textContent=mode==='char2emoji'?(o.e||'❓'):o.c;
+    btn.addEventListener('click',()=>handleAnswer(o.c));
     grid.appendChild(btn);
   });
-
-  // 更新进度
-  const totalDone = LEVELS.slice(0, currentLevel).reduce((s,l)=>s+l.chars.length,0) + currentIdx;
-  const totalAll = LEVELS.reduce((s,l)=>s+l.chars.length,0);
-  const progWrap = document.querySelector('.progress-bar-outer');
-  // 使用全局进度
 }
 
-function updateGlobalProgress() {
-  const totalDone = LEVELS.slice(0, currentLevel).reduce((s,l)=>s+l.chars.length,0) + currentIdx;
-  const totalAll = LEVELS.reduce((s,l)=>s+l.chars.length,0);
-  document.getElementById('progressBar').style.width = (totalDone/totalAll*100) + '%';
-  document.getElementById('progressText').textContent = `${totalDone}/${totalAll}`;
-}
-
-// ═══════════════════════════════════════════
-// 答题处理
-// ═══════════════════════════════════════════
-function handleAnswer(chosen, correct, btn) {
-  if (isAnswering) return;
-  isAnswering = true;
-
-  const allBtns = document.querySelectorAll('.option-btn');
-  allBtns.forEach(b => b.style.pointerEvents = 'none');
-
-  totalAnswered++;
-
-  if (chosen === correct) {
-    totalCorrect++;
-    btn.classList.add('correct');
-    sfxCorrect();
-    showFeedback('✅');
-
-    // 正确时高亮正确按钮
-    setTimeout(() => {
-      allBtns.forEach(b => {
-        if (b.textContent === correct) b.classList.add('correct');
-        else b.classList.add('wrong');
-      });
-    }, 600);
-
-    setTimeout(() => advanceQuestion(), 1000);
-  } else {
-    btn.classList.add('wrong');
-    sfxWrong();
-    showFeedback('❌');
-
-    // 显示正确答案
-    setTimeout(() => {
-      allBtns.forEach(b => {
-        if (b.textContent === correct) b.classList.add('correct');
-      });
-    }, 500);
-
-    setTimeout(() => advanceQuestion(), 1300);
-  }
-}
-
-function showFeedback(emoji) {
-  const el = document.getElementById('feedback');
-  el.textContent = emoji;
-  el.classList.remove('show');
-  void el.offsetWidth;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 1200);
-}
-
-function advanceQuestion() {
-  const level = LEVELS[currentLevel];
-  currentIdx++;
-
-  if (currentIdx >= level.chars.length) {
-    // 当前关卡完成
-    const correctInLevel = totalCorrect - LEVELS.slice(0,currentLevel).reduce((s,l)=>s+l.chars.length,0);
-    const stars = correctInLevel >= 6 ? 3 : correctInLevel >= 4 ? 2 : correctInLevel >= 2 ? 1 : 0;
-    earnedStars[currentLevel] = stars;
-    if (stars >= 1) sfxStar();
-    renderStars();
-
-    if (currentLevel >= LEVELS.length - 1) {
-      // 全部完成
-      setTimeout(showComplete, 600);
-    } else {
-      // 进入下一关
-      currentLevel++;
-      currentIdx = 0;
-      setTimeout(() => { updateGlobalProgress(); renderQuestion(); isAnswering = false; }, 800);
-    }
-  } else {
-    updateGlobalProgress();
-    renderQuestion();
-    isAnswering = false;
-  }
-}
-
-// ═══════════════════════════════════════════
-// 完成界面
-// ═══════════════════════════════════════════
-function showComplete() {
-  sfxComplete();
-  spawnConfetti();
-
-  const overlay = document.createElement('div');
-  overlay.className = 'complete-overlay';
-  overlay.innerHTML = `
-    <div class="complete-card">
-      <div class="trophy">🏆</div>
-      <h2>太棒了！全部完成！</h2>
-      <p style="color:#78716c;margin:8px 0;">你认识了 ${LEVELS.reduce((s,l)=>s+l.chars.length,0)} 个汉字</p>
-      <div class="score">⭐ ${earnedStars.reduce((a,b)=>a+b,0)} / ${LEVELS.length*3}</div>
-      <p style="color:#a8a29e;font-size:14px;margin:4px 0;">
-        正确率：${Math.round(totalCorrect/totalAnswered*100)}%
-      </p>
-      <button onclick="restartGame()">🔄 再玩一次</button>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) { overlay.remove(); restartGame(); }
+function handleAnswer(chosen){
+  if(answering)return;answering=true;
+  const correct=chosen===q.target.c;
+  document.querySelectorAll('.opt').forEach(b=>b.style.pointerEvents='none');
+  // 找到按钮
+  document.querySelectorAll('.opt').forEach(b=>{
+    if(b.textContent===chosen)b.classList.add(correct?'correct':'wrong');
+    if(!correct&&b.textContent===q.target.c)setTimeout(()=>b.classList.add('correct'),400);
   });
+  // 更新状态
+  if(correct){
+    state.correct[q.target.c]=(state.correct[q.target.c]||0)+1;
+    if(state.wrong[q.target.c])state.wrong[q.target.c]=Math.max(0,(state.wrong[q.target.c]||0)-1);
+    state.totalCorrect++;state.streak++;
+    if(state.streak>state.bestStreak)state.bestStreak=state.streak;
+    state._recentResults.push(true);if(state._recentResults.length>20)state._recentResults.shift();
+    sfxOk();
+    showFb('✅');
+  }else{
+    state.wrong[q.target.c]=(state.wrong[q.target.c]||0)+1;
+    state.totalWrong++;state.streak=0;
+    state._recentResults.push(false);if(state._recentResults.length>20)state._recentResults.shift();
+    sfxNo();
+    showFb('❌');
+  }
+  state._lastReview[q.target.c]=state.roundsPlayed;
+  state.currentLevel=getDifficultyLevel(state);
+  saveState(state);
+
+  // 每15题检查是否升级
+  const doCheck=roundInSession%15===0&&roundInSession>0;
+  setTimeout(()=>{
+    if(doCheck&&roundInSession>=45){
+      showResult();
+    }else{
+      nextRound();
+    }
+  },correct?700:1000);
 }
 
-function spawnConfetti() {
-  const colors = ['#fbbf24','#f59e0b','#ef4444','#3b82f6','#10b981','#8b5cf6','#ec4899','#f97316'];
-  for (let i = 0; i < 60; i++) {
-    setTimeout(() => {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = Math.random()*100 + '%';
-      piece.style.top = -(Math.random()*40+10) + 'px';
-      piece.style.width = (Math.random()*10+6) + 'px';
-      piece.style.height = (Math.random()*10+6) + 'px';
-      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
-      piece.style.borderRadius = Math.random()>0.5?'50%':'2px';
-      piece.style.animationDuration = (Math.random()*2+1.5) + 's';
-      document.body.appendChild(piece);
-      setTimeout(() => piece.remove(), 3000);
-    }, i*25);
+function showFb(e){
+  const el=document.getElementById('fpop');
+  el.textContent=e;el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+}
+
+function showResult(){
+  const app=document.getElementById('app');
+  const recent=state._recentResults.slice(-15)||[];
+  const acc15=recent.length>0?Math.round(recent.filter(r=>r).length/recent.length*100):0;
+  const lvl=getDifficultyLevel(state);
+  sfxWin();
+  spawnConfetti();
+  app.innerHTML=`
+    <div class="result-overlay" onclick="event.target===this&&nextRound()">
+      <div class="result-card">
+        <div class="trophy">${acc15>=80?'🏆':'🌟'}</div>
+        <h2>${acc15>=80?'太棒了！':acc15>=60?'继续加油！':'别灰心！'}</h2>
+        <div class="big-num">${acc15}%</div>
+        <div class="detail">最近15题正确率</div>
+        <div class="detail">当前难度：<span class="level-tag lv-${lvl<=2?'easy':lvl<=4?'med':'hard'}">Lv${lvl}</span></div>
+        <div class="detail">已掌握 ${Object.keys(state.correct).length} 个字 | 连胜 ${state.bestStreak} 题</div>
+        <div class="btn-row">
+          <button class="btn btn-green btn-med" onclick="spawnConfetti();nextRound()">▶️ 继续闯关</button>
+          <button class="btn btn-outline btn-med" onclick="r()">🏠 回主页</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function spawnConfetti(){
+  const cs=['#fbbf24','#f59e0b','#ef4444','#3b82f6','#10b981','#8b5cf6','#ec4899'];
+  for(let i=0;i<40;i++)setTimeout(()=>{
+    const d=document.createElement('div');d.className='confetti';
+    d.style.left=Math.random()*100+'%';d.style.top=-(Math.random()*30+5)+'px';
+    d.style.width=(Math.random()*8+4)+'px';d.style.height=(Math.random()*8+4)+'px';
+    d.style.background=cs[Math.floor(Math.random()*cs.length)];
+    d.style.borderRadius=Math.random()>.5?'50%':'2px';d.style.animationDuration=(Math.random()*1.5+1.2)+'s';
+    document.body.appendChild(d);setTimeout(()=>d.remove(),2500);
+  },i*20);
+}
+
+function resetData(){
+  if(confirm('确定要重新开始吗？所有进度将被清空。')){
+    state={correct:{},wrong:{},totalCorrect:0,totalWrong:0,currentLevel:1,streak:0,bestStreak:0,mode:'emoji2char',roundsPlayed:0,_recentResults:[],_lastReview:{}};
+    saveState(state);r();
   }
 }
 
-function restartGame() {
-  document.querySelectorAll('.complete-overlay').forEach(e=>e.remove());
-  currentLevel = 0;
-  currentIdx = 0;
-  totalCorrect = 0;
-  totalAnswered = 0;
-  earnedStars = [];
-  isAnswering = false;
-  renderStars();
-  updateGlobalProgress();
-  renderQuestion();
-}
-
-// ═══════════════════════════════════════════
 // 启动
-// ═══════════════════════════════════════════
-renderStars();
-updateGlobalProgress();
-renderQuestion();
+r();
 </script>
 </body>
 </html>
